@@ -1,2 +1,69 @@
-there is a king
-there is also a queen
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int n;
+	cout<<"Enter the no. of processes: ";
+	cin>>n;
+	int at[n], bt[n], pid[n];
+	for (int i=0;i<n;i++)
+	{
+		cout<<"Enter process ID "<<1+i<<": ";
+		cin>>pid[i];
+		cout<<"Enter arrival time of process "<<1+i<<": ";
+		cin>>at[i];
+		cout<<"Enter burst time of process "<<1+i<<": ";
+		cin>>bt[i];
+	}
+	int small,pos,tmp;
+	for (int i=0;i<n;i++)
+	{	
+		small = at[i];
+		pos=i;
+		for(int j=i+1; j<n;j++)
+		{	if(at[j]<small)
+			{small=at[j];	pos=j;}
+			else if(at[j]=small)
+			{if(pid[j]<pid[pos])
+				pos=j;}
+		}
+		tmp=at[i];
+		at[i]=at[pos];
+		at[pos]=tmp;
+
+		tmp=pid[i];
+		pid[i]=pid[pos];
+		pid[pos]=tmp;
+		
+		tmp=bt[i];
+		bt[i]=bt[pos];
+		bt[pos]=tmp;
+	}	
+	int wt[n],twt=0;
+	wt[0]=0;
+	for (int i=1;i<n;i++)
+	{	wt[i]=bt[i-1]+wt[i-1]+at[i-1]-at[i];
+	 	twt+=wt[i]; }
+	
+	cout<<"The average waiting time is: "<<(float)twt/n;
+	cout<<endl;
+	int ct[n],tct,fct=0;
+	ct[0]=bt[0]-at[0];
+	tct=ct[0];
+	fct=ct[0];
+	for (int i=1;i<n;i++)
+	{	ct[i]=bt[i]+tct;
+		tct=ct[i];
+		fct+=ct[i]; }
+	cout<<"The average complition time is: "<<(float)fct/n;
+	cout<<endl;
+	int tat[n],totaltat=0;
+	for (int  i = 0; i < n ; i++) 
+    {	tat[i] = bt[i] + wt[i];
+		totaltat+=tat[i];
+	}
+	cout<<"The average turnaround time is: "<<(float)totaltat/n;
+	cout<<endl; 
+	return 0;
+}
